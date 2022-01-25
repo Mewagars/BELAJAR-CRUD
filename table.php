@@ -1,15 +1,5 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "myDB";
-//create connection
-$conn = mysqli_connect($servername,$username,$password,$dbname);
-// check connection
-if (!$conn) {
-    die("connection failed: " . mysqli_connect_error());
-}
-//sql to create table
+include "config.php";
 $sql = "CREATE TABLE Myguest (
 id INT (6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 firstname VARChAR(30) NOT NULL,
