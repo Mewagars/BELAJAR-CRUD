@@ -1,6 +1,11 @@
 <?php
 include "config.php";
-$sql = "SELECT id, firstname, lastname FROM Myguest";
+if (!empty($_GET) && !empty($_GET["id"])){
+    $id = $_GET["id"];
+}else {
+    $id = 0;
+}
+$sql = "SELECT id, firstname, lastname FROM Myguest where id=".$id;
 $result = mysqli_query($conn,$sql);
 if (mysqli_num_rows($result) > 0) {
     //output data of each row

@@ -1,6 +1,11 @@
 <?php
 include "config.php";
-$sql = "DELETE FROM myguest WHERE id=3";
+if (!empty($_GET) && !empty($_GET["id"])){
+    $id = $_GET["id"];
+}else {
+    $id = 0;
+}
+$sql = "DELETE FROM myguest WHERE id=".$id;
 if (mysqli_query($conn,$sql)) {
     echo "record deleted successfully";
 } else {
