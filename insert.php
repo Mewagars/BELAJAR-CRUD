@@ -42,29 +42,44 @@ jika gagal akan menampilkan pesan failed
 if (mysqli_stmt_execute($stmt)) {
     echo "New record created successfully<br/>";
     if (!empty($_FILES)){
-        // ambil data file
-        $namaFile = $_FILES['foto']['name'];
-        $namaSementara = $_FILES['foto']['tmp_name'];
+        // validasi file upload harus lebih kecil dari 5MB
+        if($_FILES['foto']['size'] <= 5000000){
+            $ekstensiYangDibolehkan = [
+                'image/png',
+                'image/jpg',
+                'image/jpeg',
+                'image/webp'
+            ];
+            $type = mime_content_type($_FILES['foto']['tmp_name']);
+            if (in_array($type, $ekstensiYangDibolehkan)) {
+                // ambil data file
+                $namaFile = 'foto_'.time().'.png';
+                $namaSementara = $_FILES['foto']['tmp_name'];
 
-        // tentukan lokasi file akan dipindahkan
-        $dirUpload = "upload/";
+                // tentukan lokasi file akan dipindahkan
+                $dirUpload = "upload/";
 
-        // pindahkan file
-        $terupload = move_uploaded_file($namaSementara, $dirUpload.$namaFile);
-            if ($terupload) {
-                echo "Upload berhasil!<br/>";
-                echo "Link: <a href='".$dirUpload.$namaFile."'>".$namaFile."</a>";
-                $sql = "update myguest set foto=? where id=?";
-                $id= mysqli_stmt_insert_id($stmt);
-                /* variabel $stmt diisi fungsi mysqli_prepare dengan input parameter $conn dan $sql
-                */
-                $stmt = mysqli_prepare($conn,$sql);
-                mysqli_stmt_bind_param($stmt, "si" , $namaFile,$id);
-                mysqli_stmt_execute($stmt);
-            } else {
-                echo "Upload Gagal!";
+                // pindahkan file
+                $terupload = move_uploaded_file($namaSementara, $dirUpload.$namaFile);
+                if ($terupload) {
+                    echo "Upload berhasil!<br/>";
+                    echo "Link: <a href='".$dirUpload.$namaFile."'>".$namaFile."</a>";
+                    $sql = "update myguest set foto=? where id=?";
+                    $id= mysqli_stmt_insert_id($stmt);
+                    /* variabel $stmt diisi fungsi mysqli_prepare dengan input parameter $conn dan $sql
+                    */
+                    $stmt = mysqli_prepare($conn,$sql);
+                    mysqli_stmt_bind_param($stmt, "si" , $namaFile,$id);
+                    mysqli_stmt_execute($stmt);
+                } else {
+                    echo "Upload Gagal!";
+                }
+            }else{
+                echo 'File adalah '.$type.'. File harus berupa '.implode(', ', $ekstensiYangDibolehkan);
             }
-        
+        }else{
+            echo 'file harus lebih kecil dari 5MB';
+        }
     }
 } else {
     echo "Error:".$sql ."<br>". mysqli_error($conn);
