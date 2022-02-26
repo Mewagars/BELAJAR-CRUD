@@ -21,7 +21,7 @@ $evan = new person();
 $agus->set_name('Agus Nurwanto');
 echo $agus->get_name();
 
-$evan->set_name('M.Evan Saputra');
+$evan->set_name('M. Evan S.');
 echo '<hr>'.$evan->get_name();
 
 
